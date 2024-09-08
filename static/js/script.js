@@ -9,7 +9,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                memoryInfoDiv.textContent = data.memory_info;
+                const memoryInfo = data.memory_info.split('\n');
+                let formattedInfo = '<h2>Memory Information</h2>';
+                formattedInfo += '<ul>';
+                
+                memoryInfo.forEach(line => {
+                    if (line.trim()) {
+                        if (line.endsWith(':')) {
+                            formattedInfo += `</ul><h3>${line}</h3><ul>`;
+                        } else {
+                            const [key, value] = line.split(':');
+                            formattedInfo += `<li><strong>${key}:</strong> ${value}</li>`;
+                        }
+                    }
+                });
+                
+                formattedInfo += '</ul>';
+                memoryInfoDiv.innerHTML = formattedInfo;
             } else {
                 throw new Error(data.error || 'Failed to fetch memory information');
             }
