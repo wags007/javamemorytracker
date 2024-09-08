@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Java Memory Information</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Java Memory Information</h1>
         <button id="fetchMemoryInfo">Start Updating</button>
         <div id="memoryInfo" class="memory-info"></div>
+        <canvas id="memoryChart"></canvas>
     </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
