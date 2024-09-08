@@ -19,6 +19,10 @@ args = "Start Flask App"
 task = "workflow.run"
 args = "Git Status Check"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Commit"
+
 [[workflows.workflow]]
 name = "Start Flask App"
 author = "agent"
@@ -41,6 +45,17 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "git status"
+
+[[workflows.workflow]]
+name = "Git Commit"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git add .replit && git commit -m 'Prepare for GitHub'"
 
 [deployment]
 run = ["sh", "-c", "python main.py"]
