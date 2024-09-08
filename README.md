@@ -53,3 +53,27 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+## GitHub Repository Setup
+
+To set up a GitHub repository for this project and push your code, follow these steps:
+
+1. Create a new repository on GitHub:
+   - Go to https://github.com/new
+   - Choose a repository name
+   - Set it to Public or Private as per your preference
+   - Do not initialize with README, .gitignore, or license (we already have these)
+
+2. Link your local repository to the GitHub repository:
+   ```
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   ```
+
+3. Push your code to GitHub:
+   ```
+   git push -u origin main
+   ```
+
+4. Verify that your code is now on GitHub by refreshing your repository page.
+
+Remember to keep your repository up to date by regularly committing and pushing your changes.
