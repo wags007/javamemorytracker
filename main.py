@@ -9,11 +9,20 @@ def index():
 
 @app.route('/get_memory_info')
 def get_memory_info():
+    return execute_java_program()
+
+@app.route('/simulate_memory_leak')
+def simulate_memory_leak():
+    return execute_java_program(simulate_leak=True)
+
+def execute_java_program(simulate_leak=False):
     try:
-        # Run the Java program and capture its output
-        result = subprocess.run(['java', 'MemoryInfo'], capture_output=True, text=True, check=True)
+        command = ['java', 'MemoryInfo']
+        if simulate_leak:
+            command.append('--leak')
         
-        # Return the output as JSON
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        
         return jsonify({'memory_info': result.stdout.strip()})
     except subprocess.CalledProcessError as e:
         if 'java: not found' in str(e):

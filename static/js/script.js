@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const fetchButton = document.getElementById('fetchMemoryInfo');
+    const simulateLeakButton = document.getElementById('simulateMemoryLeak');
     const memoryInfoDiv = document.getElementById('memoryInfo');
     const ctx = document.getElementById('memoryChart').getContext('2d');
     let intervalId = null;
@@ -17,6 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 label: 'Total Memory',
                 data: [],
                 borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1
+            },
+            {
+                label: 'Leaked Memory',
+                data: [],
+                borderColor: 'rgb(255, 159, 64)',
                 tension: 0.1
             }
         ]
@@ -47,9 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chart = new Chart(ctx, chartConfig);
 
-    async function fetchMemoryInfo() {
+    async function fetchMemoryInfo(simulateLeak = false) {
         try {
-            const response = await fetch('/get_memory_info');
+            const url = simulateLeak ? '/simulate_memory_leak' : '/get_memory_info';
+            const response = await fetch(url);
             const data = await response.json();
 
             if (response.ok) {
@@ -57,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let formattedInfo = '<h2>Memory Information</h2>';
                 formattedInfo += '<ul>';
                 
-                let usedMemory, totalMemory;
+                let usedMemory, totalMemory, leakedMemory;
 
                 memoryInfo.forEach(line => {
                     if (line.trim()) {
@@ -71,6 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 usedMemory = parseFloat(value.trim().split(' ')[0]);
                             } else if (key.trim() === 'Total Memory') {
                                 totalMemory = parseFloat(value.trim().split(' ')[0]);
+                            } else if (key.trim() === 'Simulated Memory Leak Size') {
+                                leakedMemory = parseFloat(value.trim().split(' ')[0]);
                             }
                         }
                     }
@@ -83,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const now = new Date();
                 chart.data.datasets[0].data.push({x: now, y: usedMemory});
                 chart.data.datasets[1].data.push({x: now, y: totalMemory});
+                chart.data.datasets[2].data.push({x: now, y: leakedMemory});
 
                 // Keep only the last 20 data points
                 if (chart.data.datasets[0].data.length > 20) {
@@ -101,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startFetching() {
         if (intervalId === null) {
             fetchMemoryInfo(); // Fetch immediately
-            intervalId = setInterval(fetchMemoryInfo, 5000); // Then fetch every 5 seconds
+            intervalId = setInterval(() => fetchMemoryInfo(), 5000); // Then fetch every 5 seconds
             fetchButton.textContent = 'Stop Updating';
         }
     }
@@ -120,5 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             stopFetching();
         }
+    });
+
+    simulateLeakButton.addEventListener('click', () => {
+        fetchMemoryInfo(true);
     });
 });
