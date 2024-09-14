@@ -116,7 +116,7 @@ agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git add .replit && git commit -m 'Update .replit file'"
+args = "git add README.md && git commit -m 'Update README.md with auto-push feature'"
 
 [[workflows.workflow]]
 name = "Git Push"
