@@ -14,8 +14,9 @@ jobs:
         fetch-depth: 0
     - name: Push to remote repository
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PAT: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git push https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
+        git remote set-url origin https://${PAT}@github.com/${GITHUB_REPOSITORY}.git
+        git push origin HEAD:main
