@@ -83,7 +83,7 @@ agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git commit -m \"Update .replit file and prepare for GitHub push\""
+args = "git commit -m \"Configure automatic push to remote repository\""
 
 [[workflows.workflow]]
 name = "Git Remote Check"
