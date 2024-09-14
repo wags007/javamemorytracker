@@ -83,7 +83,7 @@ agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git commit -m \"Prepare project for GitHub push\""
+args = "git commit -m 'Initial commit: Java Memory Information Web App'"
 
 [[workflows.workflow]]
 name = "Git Remote Check"
@@ -138,7 +138,7 @@ agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git remote set-url origin https://TOKEN@github.com/wags007/javamemorytracker.git"
+args = "git remote set-url origin https://${GITHUB_TOKEN}@github.com/wags007/javamemorytracker.git"
 
 [[workflows.workflow]]
 name = "Git Add All"
