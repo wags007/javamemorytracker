@@ -1,32 +1,71 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { browser } from 'k6/experimental/browser';
 
 export const options = {
-  stages: [
-    { duration: '30s', target: 20 },  // Ramp up to 20 users over 30 seconds
-    { duration: '1m', target: 20 },   // Stay at 20 users for 1 minute
-    { duration: '30s', target: 0 },   // Ramp down to 0 users over 30 seconds
-  ],
+  scenarios: {
+    browser: {
+      executor: 'shared-iterations',
+      vus: 1,
+      iterations: 1,
+      options: {
+        browser: {
+          type: 'chromium',
+        },
+      },
+    },
+    api: {
+      executor: 'ramping-vus',
+      startVUs: 0,
+      stages: [
+        { duration: '30s', target: 20 },
+        { duration: '1m', target: 20 },
+        { duration: '30s', target: 0 },
+      ],
+    },
+  },
 };
 
 export default function () {
-  // Test the main page
-  let res = http.get('http://localhost:5001/');
-  check(res, { 'status was 200': (r) => r.status == 200 });
-  
-  // Test the get_memory_info endpoint
-  res = http.get('http://localhost:5001/get_memory_info');
-  check(res, { 
-    'status was 200': (r) => r.status == 200,
-    'body contains memory info': (r) => r.body.includes('Total Memory'),
-  });
-  
-  // Test the simulate_memory_leak endpoint
-  res = http.get('http://localhost:5001/simulate_memory_leak');
-  check(res, { 
-    'status was 200': (r) => r.status == 200,
-    'body contains leaked memory info': (r) => r.body.includes('Simulated Memory Leak Size'),
-  });
-  
-  sleep(1);
+  http.get('http://localhost:5001/');
+}
+
+export async function handleSummary(data) {
+  console.log('Preparing the end-of-test summary...');
+  return {
+    'summary.json': JSON.stringify(data),
+  };
+}
+
+export async function browserTest() {
+  const page = browser.newPage();
+
+  try {
+    await page.goto('http://localhost:5001/');
+
+    check(page, {
+      'header is present': (p) => p.locator('h1').textContent() === 'Java Memory Information',
+    });
+
+    const fetchButton = page.locator('#fetchMemoryInfo');
+    await fetchButton.click();
+
+    await page.waitForTimeout(5000); // Wait for 5 seconds to allow data to load
+
+    check(page, {
+      'memory info is displayed': (p) => p.locator('#memoryInfo').textContent().includes('Total Memory'),
+    });
+
+    const simulateLeakButton = page.locator('#simulateMemoryLeak');
+    await simulateLeakButton.click();
+
+    await page.waitForTimeout(5000); // Wait for 5 seconds to allow leak simulation
+
+    check(page, {
+      'memory leak is simulated': (p) => p.locator('#memoryInfo').textContent().includes('Simulated Memory Leak Size'),
+    });
+
+  } finally {
+    page.close();
+  }
 }
