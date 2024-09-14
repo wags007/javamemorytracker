@@ -47,6 +47,10 @@ args = "Update Git Remote"
 task = "workflow.run"
 args = "Git Add All"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Config"
+
 [[workflows.workflow]]
 name = "Start Flask App"
 author = "agent"
@@ -134,7 +138,7 @@ agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git remote set-url origin https://github.com/wags007/javamemorytracker.git"
+args = "git remote set-url origin https://TOKEN@github.com/wags007/javamemorytracker.git"
 
 [[workflows.workflow]]
 name = "Git Add All"
@@ -146,6 +150,17 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "git add ."
+
+[[workflows.workflow]]
+name = "Git Config"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git config --global user.email \"noreply@example.com\" && git config --global user.name \"Replit User\""
 
 [deployment]
 run = ["sh", "-c", "python main.py"]
