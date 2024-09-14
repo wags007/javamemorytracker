@@ -23,6 +23,30 @@ args = "Git Status Check"
 task = "workflow.run"
 args = "Git Commit"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Remote Check"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Status"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Add and Commit"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Push"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Update Git Remote"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Add All"
+
 [[workflows.workflow]]
 name = "Start Flask App"
 author = "agent"
@@ -55,7 +79,73 @@ agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git add .replit && git commit -m 'Prepare for GitHub'"
+args = "git commit -m \"Prepare project for GitHub push\""
+
+[[workflows.workflow]]
+name = "Git Remote Check"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git remote -v"
+
+[[workflows.workflow]]
+name = "Git Status"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git status"
+
+[[workflows.workflow]]
+name = "Git Add and Commit"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git add .replit && git commit -m 'Update .replit file'"
+
+[[workflows.workflow]]
+name = "Git Push"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git push origin main"
+
+[[workflows.workflow]]
+name = "Update Git Remote"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git remote set-url origin https://github.com/wags007/javamemorytracker.git"
+
+[[workflows.workflow]]
+name = "Git Add All"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git add ."
 
 [deployment]
 run = ["sh", "-c", "python main.py"]
